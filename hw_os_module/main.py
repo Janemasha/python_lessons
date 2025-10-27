@@ -11,7 +11,7 @@ def dir_sort_files_by_type():
     dir_file_count = {}
     dir_file_memory = {}
     dir_file_dict = {}
-    if not files_lst:
+    if not files_lst == []:
         for file in files_lst:
             if not file == os.path.basename(__file__):
                 file_type_list = file.split('.')
@@ -114,8 +114,6 @@ def filtered_numbers_sum(file_name):
     with open(file_name, 'r') as file:
         file_content = file.read()
         numbers_list = re.findall(r'\d+', file_content)
-        print(file_content)
-        print(numbers_list)
         numbers_sum = 0
         for number in numbers_list:
             numbers_sum += int(number)
@@ -204,10 +202,10 @@ def caesar_cipher_with_file(file_name):
             write_file.write(cipher_file_content)
 
 
-choice = input('Enter task number from 1 to 8: ')
-while not (choice.isdigit() and 1 <= int(choice) <= 8):
+choice = input('Enter task number from 1 to 7: ')
+while not (choice.isdigit() and 1 <= int(choice) <= 7):
     print('Your choice is incorrect, try again')
-    choice = input('Enter task number from 1 to 8: ')
+    choice = input('Enter task number from 1 to 7: ')
 choice_int = int(choice)
 match choice_int:
     case 1:
@@ -248,7 +246,7 @@ match choice_int:
                 is_correct_file = True
             else:
                 file_path = input('Your file name is incorrect, enter name of file: ')
-        print(f'Sum of numbers in text is {print(filtered_numbers_sum(file_path))}')
+        print(f'Sum of numbers in text is {filtered_numbers_sum(file_path)}')
     case 7:
         file_path = input('Enter name of file: ')
         is_correct_file = False
@@ -258,3 +256,4 @@ match choice_int:
             else:
                 file_path = input('Your file name is incorrect, enter name of file: ')
         caesar_cipher_with_file(file_path)
+        print(f'The data in the file {file_path} is encrypted')
