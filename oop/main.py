@@ -63,6 +63,19 @@ def menu():
                 print(f'Point {(point_coord_x, point_coord_y, point_coord_z)} is in sphere')
             else:
                 print(f'Point {(point_coord_x, point_coord_y, point_coord_z)} NOT is in sphere')
+        case 5:
+            str_one = SuperStr('kgkgkgkg')
+            repeat_str = 'kgkg'
+            if str_one.is_repeatance(repeat_str):
+                print(f'String {str_one} is created by repeating string {repeat_str}')
+            else:
+                print(f'String {str_one} is NOT created by repeating string {repeat_str}')
+
+            str_two = SuperStr('mama')
+            if str_two.is_palindrom():
+                print(f'{str_two} is palindrome')
+            else:
+                print(f'{str_two} is NOT palindrome')
 
 
 class Soda:
@@ -185,6 +198,24 @@ class Sphere:
             return False
 
 
+class SuperStr(str):
+
+    def is_repeatance(self, s):
+        if len(self) % len(s) == 0:
+            repeated_str = s * (len(str(self)) // len(s))
+            return repeated_str == str(self)
+        else:
+            return False
+
+
+    def is_palindrom(self):
+        reverse_string = self[::-1]
+        if reverse_string == self:
+            return True
+        else:
+            return False
+
+
 def constructor(radius=1.0, x=0.0, y=0.0, z=0.0):
     try:
         return Sphere(radius=float(radius), x=float(x), y=float(y), z=float(z))
@@ -220,5 +251,6 @@ def enter_radius(data_type):
             print('Your choice is incorrect, try again')
             choice = input(f'Enter an integer {data_type}: ')
     return float(choice)
+
 
 menu()
