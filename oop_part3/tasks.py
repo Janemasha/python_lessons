@@ -58,6 +58,38 @@ def cyclic_sequence(finish):
         start_number += 1
 
 
+def get_pizza_size():
+    is_right_choice = False
+    user_choice = ''
+    while not is_right_choice:
+        user_choice_str = input(f'What size of pizza do you want?\n'
+                                '0 - Small\n'
+                                '1 - Medium\n'
+                                '2 - Large\n'
+                                '3 - Extra large\n'
+                                'Your answer: ')
+        try:
+            user_choice_int = int(user_choice_str)
+            if user_choice_int == 0:
+                user_choice = 'Small'
+                is_right_choice = True
+            elif user_choice_int == 1:
+                user_choice = 'Medium'
+                is_right_choice = True
+            elif user_choice_int == 2:
+                user_choice = 'Large'
+                is_right_choice = True
+            elif user_choice_int == 3:
+                user_choice = 'Extra large'
+                is_right_choice = True
+            else:
+                print('Your choice must be a number from 0 to 3, try again')
+        except TypeError:
+            print('Your choice must be a number, try again')
+    return user_choice
+
+
+
 def menu():
     choice = input('Select task to see:\n'
                    '0 - Fibonacci list\n'
@@ -99,7 +131,6 @@ def menu():
             print()
 
 
-
 def check_choice():
     is_right_choice = False
     user_choice = []
@@ -129,7 +160,6 @@ def check_choice():
     return user_choice
 
 
-
 class Pizza:
 
     def __init__(self):
@@ -156,7 +186,6 @@ class Pizza:
                 f'Ingredients: {', '.join(pizza_ingredients)}')
 
 
-
 class PizzaBuilder:
 
     def __init__(self):
@@ -164,8 +193,7 @@ class PizzaBuilder:
 
 
     def set_size(self):
-        size = input('Enter size of pizza: ')
-        self.pizza.size = size
+        self.pizza.size = get_pizza_size()
 
 
     def add_cheese(self):
@@ -219,8 +247,6 @@ class PizzaDirector:
                     self.builder.add_onions()
                 case 4:
                     self.builder.add_bacon()
-
-
 
 
 menu()
