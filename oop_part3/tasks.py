@@ -58,7 +58,6 @@ def cyclic_sequence(finish):
         start_number += 1
 
 
-
 def menu():
     choice = input('Select task to see:\n'
                    '0 - Fibonacci list\n'
@@ -88,12 +87,142 @@ def menu():
             cycle_str = map(str, cycle)
             print(f' Your cycle list is: {', '.join(cycle_str)}')
         case 2:
-            print()
+            director = PizzaDirector()
+            builder = PizzaBuilder()
+            director.set_pizza_builder(builder)
+            director.make_pizza()
+            my_pizza = builder.get_pizza()
+            print(f'Your pizza:\n{my_pizza}')
         case 3:
             print()
         case 4:
             print()
 
 
+
+def check_choice():
+    is_right_choice = False
+    user_choice = []
+    while not is_right_choice:
+        user_choice_str = input(f'Do you want to add to your pizza? Use "," to split values\n'
+                                '0 - Cheese\n'
+                                '1 - Pepperoni\n'
+                                '2 - Mushrooms\n'
+                                '3 - Onions\n'
+                                '4 - Bacon\n'
+                                'Your answer: ')
+        user_choice_str.replace(' ', '')
+        user_lst = user_choice_str.split(',')
+        right_values_counter = 0
+        for ingredient in user_lst:
+            try:
+                ingredient_int = int(ingredient)
+                if 0 <= ingredient_int <= 4:
+                    right_values_counter += 1
+                    user_choice.append(ingredient_int)
+                else:
+                    print(f'{ingredient} is not a number from 0 to 4')
+            except TypeError:
+                print(f'{ingredient} is not a number')
+        if right_values_counter == len(user_lst):
+            is_right_choice = True
+    return user_choice
+
+
+
+class Pizza:
+
+    def __init__(self):
+        self.size = None
+        self.cheese = False
+        self.pepperoni = False
+        self.mushrooms = False
+        self.onions = False
+        self.bacon = False
+
+    def __str__(self):
+        pizza_ingredients = []
+        if self.cheese:
+            pizza_ingredients.append('cheese')
+        if self.pepperoni:
+            pizza_ingredients.append('pepperoni')
+        if self.mushrooms:
+            pizza_ingredients.append('mushrooms')
+        if self.onions:
+            pizza_ingredients.append('onions')
+        if self.bacon:
+            pizza_ingredients.append('bacon')
+        return (f'Size: {self.size}\n'
+                f'Ingredients: {', '.join(pizza_ingredients)}')
+
+
+
+class PizzaBuilder:
+
+    def __init__(self):
+        self.pizza = Pizza()
+
+
+    def set_size(self):
+        size = input('Enter size of pizza: ')
+        self.pizza.size = size
+
+
+    def add_cheese(self):
+        self.pizza.cheese = True
+
+
+    def add_pepperoni(self):
+        self.pizza.pepperoni = True
+
+
+    def add_mushrooms(self):
+        self.pizza.mushrooms = True
+
+
+    def add_onions(self):
+        self.pizza.onions = True
+
+
+    def add_bacon(self):
+        self.pizza.bacon = True
+
+
+    def get_pizza(self):
+        return self.pizza
+
+
+class PizzaDirector:
+
+    def __init__(self):
+        self.builder = None
+
+
+    def set_pizza_builder(self, builder):
+        self.builder = builder
+
+
+    def make_pizza(self):
+        if not self.builder:
+            raise ValueError('We do not have builder')
+        self.builder.set_size()
+        ingredients_lst = check_choice()
+        for ingredient in ingredients_lst:
+            match ingredient:
+                case 0:
+                    self.builder.add_cheese()
+                case 1:
+                    self.builder.add_pepperoni()
+                case 2:
+                    self.builder.add_mushrooms()
+                case 3:
+                    self.builder.add_onions()
+                case 4:
+                    self.builder.add_bacon()
+
+
+
+
 menu()
+
 
