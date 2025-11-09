@@ -1,16 +1,26 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
+class SomeIterator:
+    def __iter__(self):
+        return SomeIterator(self.limit)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+    def __init__(self, limit):
+        self.limit = limit
+        self.counter = 0
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+    def __next__(self):
+        if self.counter < self.limit:
+            self.counter += 1
+            return self.counter
+        else:
+            raise StopIteration
+
+
+my_iterator = SomeIterator(5)
+for item in my_iterator:
+    print(item)
+
+
+for item in my_iterator:
+    print(item)
+
