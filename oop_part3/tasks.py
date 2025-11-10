@@ -1,4 +1,7 @@
 import copy
+from abc import ABC, abstractmethod
+from operator import truediv
+
 
 def fibonacci_gen(finish):
     start = 0
@@ -40,7 +43,7 @@ def user_number(task_name):
                 user_number_fib = user_number_int
             else:
                 print('Number must be more then 0, try again')
-        except TypeError:
+        except ValueError:
             print('You need to enter an integer, try again')
     return user_number_fib - 1
 
@@ -84,10 +87,28 @@ def get_pizza_size():
                 is_right_choice = True
             else:
                 print('Your choice must be a number from 0 to 3, try again')
-        except TypeError:
+        except ValueError:
             print('Your choice must be a number, try again')
     return user_choice
 
+
+def animal_choice():
+    is_right_choice = False
+    user_choice = ''
+    while not is_right_choice:
+        user_choice_str = input(f'What animal do you choose?\n'
+                                '0 - Cat\n'
+                                '1 - Dog\n'
+                                'Yor choice: ')
+        if user_choice_str == '0':
+            user_choice = 'Cat'
+            is_right_choice = True
+        elif user_choice_str == '1':
+            user_choice = 'Dog'
+            is_right_choice = True
+        else:
+            print('Unknown animal')
+    return user_choice
 
 
 def menu():
@@ -126,9 +147,14 @@ def menu():
             my_pizza = builder.get_pizza()
             print(f'Your pizza:\n{my_pizza}')
         case 3:
-            print()
+            animal_creator = AnimalFactory()
+            animal_name = animal_choice()
+            animal = animal_creator.create_animal(animal_name)
+            print(f'{animal_name} says {animal.speak()}')
         case 4:
-            print()
+            option = Calculator()
+            result = option.calculate()
+            print(f'Your result: {result}')
 
 
 def check_choice():
@@ -153,7 +179,7 @@ def check_choice():
                     user_choice.append(ingredient_int)
                 else:
                     print(f'{ingredient} is not a number from 0 to 4')
-            except TypeError:
+            except ValueError:
                 print(f'{ingredient} is not a number')
         if right_values_counter == len(user_lst):
             is_right_choice = True
@@ -247,6 +273,123 @@ class PizzaDirector:
                     self.builder.add_onions()
                 case 4:
                     self.builder.add_bacon()
+
+class Animal(ABC):
+
+    @abstractmethod
+    def speak(self):
+        pass
+
+
+class Cat(Animal):
+
+    def speak(self):
+        return 'Mew'
+
+
+class Dog(Animal):
+
+    def speak(self):
+        return 'Woof'
+
+
+class AnimalFactory:
+
+    @classmethod
+    def create_animal(cls, animal_type):
+        animals = {
+            'cat': Cat(),
+            'dog': Dog()
+        }
+        try:
+            return animals[animal_type.lower()]
+        except KeyError:
+            print('We do not have such an animal')
+
+
+class Calculator:
+
+    def __init__(self):
+        self.strategy = None
+        self.strategy_obj = None
+
+
+    def set_strategy(self):
+        right_strategy = False
+        while not right_strategy:
+            user_strategy = input('Chose operation to do:\n'
+                                  '0 - Addition\n'
+                                  '1 - Substraction\n'
+                                  '2 - Multiplication\n'
+                                  '3 - Division\n'
+                                  'Your choice: ')
+            try:
+                user_strategy_int = int(user_strategy)
+                if 0 <= user_strategy_int <= 3:
+                    self.strategy = int(user_strategy)
+                    right_strategy = True
+                    match self.strategy:
+                        case 0:
+                            self.strategy_obj = Addition()
+                        case 1:
+                            self.strategy_obj = Substraction()
+                        case 2:
+                            self.strategy_obj = Multiplication()
+                        case 3:
+                            self.strategy_obj = Division()
+                else:
+                    print('Yor choice must be from 0 to 3')
+            except ValueError:
+                print('Your choice must be an integer')
+
+
+    @staticmethod
+    def set_user_numbers(number_variant):
+        is_right_number = False
+        user_number_float = 0
+        while not is_right_number:
+            user_number_str = input(f'Enter your {number_variant}: ')
+            try:
+                user_number_float = float(user_number_str)
+                is_right_number = True
+            except ValueError:
+                print('Your number must have type INT or FLOAT, please, try again')
+        return user_number_float
+
+
+    def calculate(self):
+        self.set_strategy()
+        number_a = self.set_user_numbers('Number A')
+        number_b = self.set_user_numbers('Number B')
+        return self.strategy_obj.execute(number_a, number_b)
+
+
+class Addition:
+
+    @staticmethod
+    def execute(number_a, number_b):
+        return number_a + number_b
+
+
+class Substraction:
+
+    @staticmethod
+    def execute(number_a, number_b):
+        return number_a - number_b
+
+
+class Multiplication:
+
+    @staticmethod
+    def execute(number_a, number_b):
+        return number_a * number_b
+
+
+class Division:
+
+    @staticmethod
+    def execute(number_a, number_b):
+        return number_a / number_b
 
 
 menu()
