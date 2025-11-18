@@ -1,0 +1,30 @@
+create table if not exists animal_food(
+	id serial primary key,
+	name varchar(250),
+	animal_type varchar(50),
+	category varchar(50),
+	price numeric(10, 2)
+);
+
+insert into animal_food(name, animal_type, category, price)
+			values ('Monge Cat Bwild Low Grain Adult', 'Cat', 'Dry food', 270.30),
+				   ('Bosch Sanabelle Juicy Adult', 'Cat', 'Semi-moist food', 5.20),
+				   ('BLITZ Cat Vetline Urinary', 'Cat', 'Dry food', 17.18),
+				   ('Brunch Adult Mini Breeds', 'Dog', 'Dry food', 18.90),
+				   ('Advance Dog VetDiet Renal', 'Dog', 'Dry food', 278),
+				   ('Royal Canin Mini Adult', 'Dog', 'Pate', 5.63),
+				   ('Bosch Freshe Schnauze Topping', 'Dog', 'Topping', 10.45);
+
+update animal_food set price = price*1.1 where id = 3;
+
+alter table animal_food add column packages_number integer;
+
+update animal_food set packages_number = 5;
+
+select id, name, price, packages_number from animal_food where animal_type = 'Cat';
+
+select id, name, price, packages_number from animal_food where price > 100;
+
+select id, name, category, price, packages_number from animal_food where category = 'Dry food';
+
+select round(avg(price), 2) from animal_food;
