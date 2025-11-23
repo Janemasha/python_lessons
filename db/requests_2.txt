@@ -1,0 +1,136 @@
+create table if not exists authors (
+	id serial primary key,
+	first_name varchar(500),
+	last_name varchar(500)
+);
+
+
+create table if not exists books (
+	id serial primary key,
+	title varchar(1000),
+	author_id int, foreign key (author_id) references authors(id)
+);
+
+
+create table if not exists sales (
+	id serial primary key,
+	book_id int, foreign key (book_id) references books(id),
+	quantity int
+
+);
+
+
+insert into authors (first_name, last_name) values
+	('Лев', 'Толстой'),
+	('Федор', 'Достоевский'),
+	('Михаил', 'Булгаков'),
+	('Уильям', 'Шекспир'),
+	('Александр', 'Пушкин'),
+	('Александр', 'Дюма');
+
+
+insert into books (title, author_id) values
+	('Война и мир', 1),
+	('Анна Каренина', 1),
+	('Преступление и наказание', 2),
+	('Идиот', 2),
+	('Братья Карамазовы', 2),
+	('Мастер и Марагарита', 3),
+	('Собачье сердце', 3),
+	('Ромео и Джульетта', 4),
+	('Евгений Онегин', 5),
+	('Капитанская дочка', 5),
+	('Три мушкетера', 6),
+	('Граф Монте-Кристо', 6);
+
+
+insert into sales (book_id, quantity) values
+	(1, 6),
+	(2, 4),
+	(4, 2),
+	(6, 5),
+	(8, 7);
+
+
+select books.title as books_title,
+	authors.first_name as first_name,
+	authors.last_name as last_name
+from books
+inner join authors on books.author_id = authors.id;
+
+
+insert into authors (first_name, last_name) values
+	('Стивен', 'Кинг'),
+	('Джоан', 'Роулинг');
+
+
+select authors.first_name as first_name,
+	authors.last_name as last_name,
+	books.title as books_title
+from authors
+left join books on authors.id = books.author_id;
+
+
+insert into books (title, author_id) values
+	('Три товарища', Null),
+	('451 градус по Фаренгейту', Null);
+
+
+select books.title as books_title,
+	authors.first_name as first_name,
+	authors.last_name as last_name,
+	sales.quantity as saled_quantity
+from books
+inner join authors on books.author_id = authors.id
+inner join sales on books.id = sales.book_id;
+
+
+select authors.first_name as first_name,
+	authors.last_name as last_name,
+	books.title as books_title,
+	sales.quantity as saled_quantity
+from authors
+left join books on authors.id = books.author_id
+left join sales on books.id = sales.book_id;
+
+
+select authors.first_name as first_name,
+	authors.last_name as last_name,
+	sum(sales.quantity) as sales_quantity
+from authors
+inner join books on authors.id = books.author_id
+inner join sales on books.id = sales.book_id
+group by authors.id, authors.first_name, authors.last_name;
+
+
+select authors.first_name as first_name,
+	authors.last_name as last_name,
+	sum(sales.quantity) as sales_quantity
+from authors
+left join books on authors.id = books.author_id
+left join sales on books.id = sales.book_id
+group by authors.id, authors.first_name, authors.last_name;
+
+
+select
+*
+from
+	(select authors.first_name as first_name,
+		authors.last_name as last_name,
+		sum(sales.quantity) as sales_quantity
+	from authors
+	inner join books on authors.id = books.author_id
+	inner join sales on books.id = sales.book_id
+	group by authors.id, authors.first_name, authors.last_name
+	order by sum(sales.quantity) desc) as prepared_table
+limit 1;
+
+
+select books.title as books_title,
+	sales.quantity as sales_quantity
+from books
+left join sales on books.id = sales.book_id where sales.quantity >=
+	(select sum(quantity) from sales)
+	/
+	(select count(*) from books)
+group by books.title, sales.quantity;
